@@ -1,0 +1,96 @@
+generated: '2026-07-19'
+method: searched
+source: https://analysis.lastline.com/analysis/api-docs/html/sample_clients.html
+docs: https://analysis.lastline.com/analysis/api-docs/html/sample_clients.html
+note: >-
+  Lastline never published its client libraries to a public package registry — npm, PyPI, RubyGems,
+  Maven Central, NuGet, pkg.go.dev, Packagist and crates.io were all probed on 2026-07-19 and returned
+  no first-party Lastline package (the npm package `lastline` is an unrelated string utility by a
+  third party). The official Python client and helper tooling are distributed as direct downloads from
+  the API documentation host, which is still live and returned HTTP 200 on 2026-07-19.
+registries_probed:
+- registry: npm
+  result: no first-party package
+- registry: pypi
+  result: no first-party package
+- registry: rubygems
+  result: no first-party package
+- registry: maven-central
+  result: no first-party package
+- registry: nuget
+  result: no first-party package
+- registry: pkg.go.dev
+  result: no first-party package
+- registry: packagist
+  result: no first-party package
+- registry: crates.io
+  result: no first-party package
+packages:
+- language: python
+  registry: direct-download
+  name: analysis_apiclient
+  title: Lastline Analyst API client
+  url: https://analysis.lastline.com/analysis/api-docs/llapi_client/analysis_apiclient.py
+  docs: https://analysis.lastline.com/analysis/api-docs/html/analysis_client.html
+  install: curl -O https://analysis.lastline.com/analysis/api-docs/llapi_client/analysis_apiclient.py
+  official: true
+  http_status: 200
+  description: Python client implementing the client side of every Lastline Analyst API method.
+    Exposes the AnalysisClientBase / AnalysisClient classes and is intended to be imported into
+    customer Python code.
+  requirements:
+  - Python 2.7
+  - requests (tested with 2.2.1)
+  - simplejson (tested with 3.6.5)
+  - ipython (tested with 2.4.1, only for the interactive shell)
+- language: python
+  registry: direct-download
+  name: analysis_apiclient_shell
+  title: Lastline Analysis Client Shell
+  url: https://analysis.lastline.com/analysis/api-docs/html/analysis_client_shell.html
+  docs: https://analysis.lastline.com/analysis/api-docs/html/analysis_client_shell.html
+  official: true
+  http_status: 200
+  description: Interactive IPython shell wrapper around the Analyst API client for manually sending
+    requests and experimenting with file/URL analysis. Split out of the client module on 2016-10-28.
+- language: python
+  registry: direct-download
+  name: llappbundle
+  title: Lastline Application Bundle Module
+  url: https://analysis.lastline.com/analysis/api-docs/llappbundle/llappbundle.zip
+  docs: https://analysis.lastline.com/analysis/api-docs/html/analysis_client_application_bundles.html
+  install: curl -O https://analysis.lastline.com/analysis/api-docs/llappbundle/llappbundle.zip
+  official: true
+  http_status: 200
+  description: Python utility code for building Lastline application bundles (.llappbundle), which
+    allow detailed customization of how a submission is launched inside the analysis sandbox.
+- language: python
+  registry: direct-download
+  name: analyze_files
+  title: analyze_files submission helper
+  url: https://analysis.lastline.com/analysis/api-docs/examples/analyze_files.py
+  docs: https://analysis.lastline.com/analysis/api-docs/html/analyze_artifacts.html
+  official: true
+  description: Command-line program that submits files found recursively in a directory and waits for
+    results. See cli/lastline-cli.yml for the command surface.
+- language: python
+  registry: direct-download
+  name: analyze_urls
+  title: analyze_urls submission helper
+  url: https://analysis.lastline.com/analysis/api-docs/examples/analyze_urls.py
+  docs: https://analysis.lastline.com/analysis/api-docs/html/analyze_artifacts.html
+  official: true
+  description: Command-line program that submits URLs from a specified location and waits for results.
+    See cli/lastline-cli.yml for the command surface.
+- language: windows-executable
+  registry: direct-download
+  name: analyze_files.exe
+  url: https://analysis.lastline.com/analysis/api-docs/examples/analyze_files.exe
+  official: true
+  description: Self-contained Windows build of analyze_files with no external requirements.
+- language: windows-executable
+  registry: direct-download
+  name: analyze_urls.exe
+  url: https://analysis.lastline.com/analysis/api-docs/examples/analyze_urls.exe
+  official: true
+  description: Self-contained Windows build of analyze_urls with no external requirements.

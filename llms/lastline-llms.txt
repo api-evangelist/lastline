@@ -1,0 +1,115 @@
+# Lastline
+
+> Lastline was a Santa Barbara, California cybersecurity company founded in 2011, building
+> high-resolution malware analysis and network detection and response (NDR) technology based on
+> full-system emulation sandboxing. Its developer surface is the Lastline Analyst API, a web API for
+> submitting files and URLs to the Lastline analysis cloud and retrieving detailed behavioral
+> analysis reports, indicators of compromise and analysis artifacts. Lastline was acquired by VMware
+> in 2020 and its technology became VMware NSX Network Detection and Response; VMware was acquired by
+> Broadcom in 2023. The lastline.com marketing site is retired, but the customer portal and the full
+> Analyst API documentation remain live under Broadcom ownership.
+
+Provenance: generated 2026-07-19 by the API Evangelist enrichment pipeline from this repository's
+apis.yml and artifacts, plus live probes of the provider's own documentation host. Method: generated.
+
+## APIs
+
+- [Lastline Analyst API](https://analysis.lastline.com/analysis/api-docs/html/overview.html):
+  Asynchronous API for submitting files (PE, PDF, Office documents, Flash, Java applets, Android
+  applications, archives) and URLs for behavioral malware analysis. Base URL
+  https://analysis.lastline.com/analysis. Submissions return a task UUID; results are collected via
+  get_completed() then get_result(). Responses are JSON or XML, selected by a URL extension.
+
+## Docs
+
+- [Overview and Getting Started](https://analysis.lastline.com/analysis/api-docs/html/overview.html):
+  supported artifacts and file types, API concepts, the recommended submission/collection workflow,
+  and handling of archives and containers.
+- [API Reference](https://analysis.lastline.com/analysis/api-docs/html/api.html): authentication,
+  response format, every documented method, and the error-code registry.
+- [PDF edition](https://analysis.lastline.com/analysis/api-docs/LastlineAnalystAPI.pdf): the same
+  documentation as a single PDF.
+- [Sample API clients](https://analysis.lastline.com/analysis/api-docs/html/sample_clients.html):
+  the Python client, interactive shell, submission helper scripts and application bundle module.
+- [Analyst API client](https://analysis.lastline.com/analysis/api-docs/html/analysis_client.html):
+  the AnalysisClient class reference and its changelog.
+- [Analyze artifacts](https://analysis.lastline.com/analysis/api-docs/html/analyze_artifacts.html):
+  the analyze_files / analyze_urls command-line tools.
+- [Application bundles](https://analysis.lastline.com/analysis/api-docs/html/analysis_client_application_bundles.html):
+  building .llappbundle packages that customize how a subject is launched in the sandbox.
+
+## Authentication
+
+- HTTP Basic Authentication (RFC 7617), or the `key` + `api_token` parameter pair on each request.
+- Optionally call `login()` once to establish a session; `ping()` verifies it. Send
+  `x-nsx-lastline-no-session: 1` to suppress session creation.
+- Credentials are issued by the provider; there is no public self-service signup.
+- See: authentication/lastline-authentication.yml
+
+## Key operations
+
+- `submit_file` (POST /analysis/submit/file) — submit a file by content or by md5/sha1/sha256 hash.
+- `submit_url` (POST /analysis/submit/url) — submit a URL for analysis.
+- `get_completed` (GET or POST /analysis/get_completed) — list task UUIDs completed between `after`
+  and `before`; this is the intended polling mechanism.
+- `get_completed_with_metadata` — the same list plus scores and task metadata; preferred over
+  get_completed.
+- `get_result` (/analysis/get_result) — fetch the result summary for a task UUID.
+- `get_progress`, `get_pending`, `get_task_metadata`, `get_analysis_tags` — task status and metadata.
+- `get_result_activities`, `get_report_activities` — behaviors observed during analysis.
+- `get_result_artifact`, `get_report_artifact`, `query_task_artifact`, `is_risky_analysis_artifact` —
+  analysis artifacts.
+- `query_file_hash`, `is_blocked_file_hash` — look up prior results by hash.
+- `get_network_iocs`, `create_ioc_from_result`, `get_ioc_metadata`, `get_ioc_report` — IOC surface.
+- `export_report`, `get_exported_report`, `get_completed_exported_reports` — report export.
+- `get_child_tasks_recursively`, `get_api_utc_timestamp` — task tree and API clock.
+
+## Conventions
+
+- Asynchronous: never poll get_result() per submission; use get_completed() as a timestamp watermark.
+  Excessive polling of incomplete tasks can get a client blocked.
+- Response envelope: `{"success": 1, "data": ...}` on success,
+  `{"success": 0, "error_code": ..., "error": ...}` on failure.
+- Format via URL extension: `.json` (default) or `.xml`.
+- All timestamps are UTC. Numbers may be decimal or hexadecimal (hex prefixed `0x`).
+- No idempotency contract: a resubmission may trigger a new analysis even for a previously seen file.
+- No pagination and no rate-limit headers; quotas are license-based (error 115 on exceeding them).
+- The HTTP API is unversioned; report payloads carry their own `report_version`.
+- Max upload: 64 MB hosted; on-premises default 10 MB, configurable to 100 MB.
+- See: conventions/lastline-conventions.yml
+
+## Errors
+
+- Custom numeric registry, codes 101–123, each with a symbolic ANALYSIS_API_* name. Not RFC 9457.
+- Uploads too large may be rejected before reaching the API as HTTP 413; handle both that and
+  error_code 109.
+- See: errors/lastline-error-codes.yml
+
+## Clients
+
+- Python client `analysis_apiclient.py`:
+  https://analysis.lastline.com/analysis/api-docs/llapi_client/analysis_apiclient.py
+- Application bundle module:
+  https://analysis.lastline.com/analysis/api-docs/llappbundle/llappbundle.zip
+- CLI tools `analyze_files` / `analyze_urls` (Python scripts and self-contained Windows executables),
+  configured via a `license.ini` file holding `key` and `api_token`.
+- No first-party package was ever published to npm, PyPI, RubyGems, Maven Central, NuGet, pkg.go.dev,
+  Packagist or crates.io.
+- See: packages/lastline-packages.yml and cli/lastline-cli.yml
+
+## Deployment variants
+
+- Hosted: https://analysis.lastline.com/analysis
+- On-premises Enterprise Manager or Pinbox appliances: https://log.<fqdn>/analysis
+- On-premises Analyst appliances: https://<fqdn>/analysis
+
+## Status and caveats
+
+- The company is acquired; lastline.com marketing site is retired (connection times out).
+- The customer portal at https://user.lastline.com/portal is live and branded
+  "NSX - Network Detection and Response".
+- Documentation and client downloads remain live under Broadcom ownership.
+- There is no OpenAPI definition, no AsyncAPI or webhook surface, no MCP server, no OAuth scopes,
+  no sandbox/test credentials, no status page, no published security.txt, no bug bounty program and
+  no trust center. These absences were probed on 2026-07-19, not assumed.
+- See: lifecycle/lastline-lifecycle.yml and conformance/lastline-conformance.yml

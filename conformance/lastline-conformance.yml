@@ -1,0 +1,64 @@
+generated: '2026-07-19'
+method: derived
+source: https://analysis.lastline.com/analysis/api-docs/html/api.html
+note: >-
+  Derived from the live first-party Lastline Analyst API reference. Lastline publishes no compliance
+  or certification program on its surviving developer surface — no trust center, no SOC 2 / ISO 27001
+  / PCI / HIPAA / FedRAMP claims were found on 2026-07-19 — so no `Compliance` pointer is emitted.
+  This file asserts only cross-cutting technical standards evidenced in the documentation.
+standards:
+- id: rfc7617-http-basic
+  conforms: true
+  evidence: The reference states all endpoints accept HTTP Basic Authentication "as defined in
+    RFC-7617".
+- id: tls
+  conforms: true
+  evidence: The API is accessed over HTTPS only; credentials are explicitly documented as never sent
+    in clear-text. Live TLS probe of analysis.lastline.com succeeded 2026-07-19.
+- id: oauth2
+  conforms: false
+  evidence: No OAuth 2.0 flows, authorization server or scopes are documented; auth is API key/token
+    plus HTTP Basic and an opaque session.
+- id: oidc
+  conforms: false
+  evidence: No /.well-known/openid-configuration is served (403 on user.lastline.com, 404 on
+    analysis.lastline.com, probed 2026-07-19).
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors use a custom envelope ({"success": 0, "error_code": ..., "error": ...}), not
+    application/problem+json. See errors/lastline-error-codes.yml.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 403 on user.lastline.com and 404 on
+    analysis.lastline.com (probed 2026-07-19).
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Sunset or Deprecation header support is documented. See lifecycle/lastline-lifecycle.yml.
+- id: openapi
+  conforms: false
+  evidence: No OpenAPI or Swagger definition was ever published; the reference is prose plus a Python
+    client.
+- id: json-api
+  conforms: false
+  evidence: Responses use a bespoke success/data envelope, not the JSON:API media type or structure.
+- id: rest
+  conforms: false
+  evidence: The API is RPC-over-HTTP — method names appear in the path (/analysis/submit/file,
+    /analysis/get_result) and most operations accept either GET or POST.
+- id: idempotency
+  conforms: false
+  evidence: No idempotency key or header; resubmission may trigger a new analysis by design. See
+    conventions/lastline-conventions.yml.
+- id: pagination
+  conforms: false
+  evidence: No cursor or offset pagination; incremental retrieval is a timestamp watermark on
+    get_completed(after, before).
+- id: content-negotiation
+  conforms: partial
+  evidence: JSON and XML are both offered, but selected by a URL extension (.json / .xml) rather than
+    an Accept header.
+compliance_program:
+  published: false
+  certifications: []
+  note: None found on the surviving public surface as of 2026-07-19.

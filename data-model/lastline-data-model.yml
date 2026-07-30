@@ -1,0 +1,135 @@
+generated: '2026-07-19'
+method: searched
+source: https://analysis.lastline.com/analysis/api-docs/html/api.html
+docs: https://analysis.lastline.com/analysis/api-docs/html/api.html
+note: >-
+  No OpenAPI exists for this API, so this entity graph is not derived from a spec — it is read off the
+  live first-party prose reference: the objects each documented method addresses, and the identifier
+  parameters that bind them together. Every entity and relationship below is anchored to a documented
+  operation or parameter name.
+identifier_convention: All primary entities are addressed by UUID.
+entities:
+- name: Submission
+  description: A file or URL handed to the analysis system. Submissions may be made by file content,
+    by file hash (md5/sha1/sha256), or as a URL.
+  created_by:
+  - submit_file
+  - submit_url
+  key: task_uuid
+  fields:
+  - task_uuid
+  - submission_timestamp
+  - expires
+- name: Task
+  description: An analysis task. The asynchronous unit of work — created by a submission, resolved
+    later by UUID. Tasks may spawn child tasks when a container or bundle yields further subjects.
+  key: task_uuid
+  operations:
+  - get_result
+  - get_results
+  - get_progress
+  - get_task_metadata
+  - get_completed
+  - get_completed_with_metadata
+  - get_pending
+  - get_child_tasks_recursively
+  - get_analysis_tags
+- name: Report
+  description: The detailed analysis result for a task, in one of several per-subject report formats
+    (ll-int-win, ll-int-osx, ll-win-timeline-based, ll-osx-timeline-based, ll-int-win-doc, ll-int-apk,
+    ll-int-archive, ll-web, ll-static, ll-ioc-json, ll-pcap, ll-flash, ll-doc).
+  key: report_uuid
+  version_field: report_version
+  operations:
+  - get_result
+  - get_report_activities
+  - export_report
+  - get_exported_report
+  - get_completed_exported_reports
+- name: Activity
+  description: A behavior observed during analysis, attributed either to the task overall or to a
+    specific report.
+  operations:
+  - get_result_activities
+  - get_report_activities
+- name: Artifact
+  description: A file, dump or other object generated during analysis (or the analysis subject
+    itself), retrievable for download and checkable for risk.
+  key: artifact_uuid
+  operations:
+  - get_result_artifact
+  - get_report_artifact
+  - query_task_artifact
+  - is_risky_analysis_artifact
+- name: IOC
+  description: An indicator of compromise derived from an analysis result, including network IOCs.
+  key: ioc_uuid
+  operations:
+  - create_ioc_from_result
+  - get_ioc_metadata
+  - get_ioc_report
+  - get_network_iocs
+- name: FileHash
+  description: An md5, sha1 or sha256 digest used both to submit by-hash and to query the system for
+    prior results or blocking safety.
+  operations:
+  - query_file_hash
+  - is_blocked_file_hash
+- name: ApplicationBundle
+  description: A packaged set of files plus launch metadata (.llappbundle) describing how to run a
+    multi-file subject inside the sandbox. Built with the llappbundle Python module.
+  docs: https://analysis.lastline.com/analysis/api-docs/html/analysis_client_application_bundles.html
+relationships:
+- from: Submission
+  to: Task
+  type: has_one
+  via: task_uuid
+- from: Task
+  to: Report
+  type: has_many
+  via: report_uuid
+- from: Task
+  to: Task
+  type: has_many
+  via: get_child_tasks_recursively
+  label: child tasks
+  note: Chain depth is bounded; overly long chains are rejected with
+    ANALYSIS_API_CHILD_TASK_CHAIN_TOO_DEEP (121).
+- from: Task
+  to: Activity
+  type: has_many
+  via: get_result_activities
+- from: Report
+  to: Activity
+  type: has_many
+  via: get_report_activities
+- from: Task
+  to: Artifact
+  type: has_many
+  via: artifact_uuid
+- from: Report
+  to: Artifact
+  type: has_many
+  via: artifact_uuid
+  note: Artifacts are usually bound to a specific report; get_report_artifact is preferred over
+    get_result_artifact in that case.
+- from: Report
+  to: IOC
+  type: has_many
+  via: create_ioc_from_result
+- from: Task
+  to: IOC
+  type: has_many
+  via: get_network_iocs
+- from: FileHash
+  to: Task
+  type: has_many
+  via: query_file_hash
+- from: ApplicationBundle
+  to: Submission
+  type: has_one
+  via: submit_file
+render: null
+related:
+- conventions/lastline-conventions.yml
+- errors/lastline-error-codes.yml

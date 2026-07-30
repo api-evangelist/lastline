@@ -1,0 +1,111 @@
+generated: '2026-07-19'
+method: searched
+source: https://analysis.lastline.com/analysis/api-docs/html/overview.html
+docs: https://analysis.lastline.com/analysis/api-docs/html/api.html
+note: >-
+  Cross-cutting request/response semantics of the Lastline Analyst API, transcribed from the live
+  first-party reference. No OpenAPI was ever published, so nothing here is derived from a spec.
+api_style: rpc-over-http
+base_url: https://analysis.lastline.com/analysis
+deployment_variants:
+- name: hosted
+  base_url: https://analysis.lastline.com/analysis
+  description: API hosted in a Lastline datacenter.
+- name: on-premises-enterprise
+  base_url: https://log.<fqdn>/analysis
+  description: Lastline Enterprise Manager or Pinbox appliances.
+- name: on-premises-analyst
+  base_url: https://<fqdn>/analysis
+  description: Lastline Analyst appliances.
+authentication:
+  see: authentication/lastline-authentication.yml
+  styles:
+  - HTTP Basic (RFC 7617)
+  - key + api_token request parameters
+  - session token established via login()
+content_negotiation:
+  mechanism: url-extension
+  description: Append `.json` or `.xml` to the request path to select the response format. JSON is
+    the default when no extension is given and is recommended for automated processing; XML is
+    recommended for human consumption.
+  formats:
+  - json
+  - xml
+response_envelope:
+  success: '{"success": 1, "data": ...}'
+  failure: '{"success": 0, "error_code": <ERROR_CODE>, "error": <ERROR_MESSAGE>}'
+  see: errors/lastline-error-codes.yml
+data_conventions:
+  timestamps: All timestamps returned by the API are in UTC. get_api_utc_timestamp() returns the
+    current API-side UTC timestamp for calls that require one.
+  numbers: Numbers may be decimal or hexadecimal; hexadecimal values are always prefixed with '0x'.
+  identifiers: Analysis tasks, reports, artifacts and IOCs are all addressed by UUID.
+asynchronous_model:
+  description: >-
+    The API is asynchronous. submit_file()/submit_url() return a task UUID rather than a result;
+    results are collected later. Results may be returned inline at submission time when the artifact
+    was already analyzed.
+  recommended_workflow:
+  - Call submit_file() or submit_url() and store the returned task UUIDs.
+  - Call get_completed() to get the UUIDs of tasks completed since the last call.
+  - Call get_result() on those UUIDs to obtain results.
+  - Repeat until results are available for all UUIDs.
+  anti_pattern: >-
+    Polling get_result() per submission until results appear is explicitly discouraged; clients that
+    make too many get_result() calls on incomplete tasks may be blocked from further calls.
+caching:
+  submission_expires_field: expires
+  description: Submission responses carry an `expires` timestamp — the client may cache the returned
+    task for that submission until then; after it, the API may create a new task.
+  bypass: The `bypass_cache` parameter forces a non-cached result and requires non-default privileges.
+idempotency:
+  supported: false
+  note: >-
+    No idempotency key or header is documented. The reference explicitly states that submissions by
+    hash and by file content have identical semantics and that either may trigger a NEW analysis even
+    if the file has been seen before — so submissions are not idempotent. De-duplication is best-effort
+    via the response cache and the `expires` window, not an idempotency contract.
+pagination:
+  supported: false
+  note: >-
+    No cursor or offset pagination is documented. Incremental retrieval is time-based: get_completed()
+    returns tasks completed since a supplied timestamp, acting as the delta/watermark mechanism.
+  delta_mechanism:
+    operation: get_completed
+    parameter: after
+    description: Timestamp watermark — returns tasks completed since the given UTC timestamp.
+rate_limiting:
+  headers: []
+  note: >-
+    No rate-limit response headers are documented. Quotas are license-based: certain licenses cap the
+    number or type of submissions on a 24-hour interval and exceeding it returns error_code 115
+    (ANALYSIS_API_SUBMISSION_LIMIT_EXCEEDED). Protocol abuse (excessive get_result() polling) could
+    also result in the client being blocked.
+request_tracing:
+  request_id_header: null
+  note: No request-id or correlation header is documented.
+versioning:
+  api_version_scheme: none
+  note: >-
+    The API surface itself was unversioned — no version segment in the path and no version header.
+    Report payloads carry their own versioning via the `report_version` parameter, with per-format
+    report versions (ll-int-win, ll-web, ll-static, ll-ioc-json, ll-pcap, ll-doc, and others).
+  report_version_parameter: report_version
+  invalid_version_error: ANALYSIS_API_INVALID_REPORT_VERSION
+custom_headers:
+- name: x-nsx-lastline-no-session
+  direction: request
+  description: Set to 1 to mandate that the API not establish an HTTP session for this request.
+limits:
+  max_file_size_hosted: 64 MB
+  max_file_size_on_premises_default: 10 MB
+  max_file_size_on_premises_configurable: 100 MB
+data_retention:
+  note: Analysis data and artifacts are subject to data-retention policies; expired data returns
+    error_code 123 (ANALYSIS_API_DATA_NO_LONGER_AVAILABLE) or 114 for artifacts.
+  delete_after_analysis_parameter: delete_after_analysis
+related:
+- authentication/lastline-authentication.yml
+- errors/lastline-error-codes.yml
+- lifecycle/lastline-lifecycle.yml
+- data-model/lastline-data-model.yml

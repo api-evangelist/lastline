@@ -1,0 +1,132 @@
+generated: '2026-07-19'
+method: searched
+source: https://analysis.lastline.com/analysis/api-docs/html/api.html#error-codes
+docs: https://analysis.lastline.com/analysis/api-docs/html/api.html#error-codes
+note: >-
+  Transcribed verbatim from the live first-party Lastline Analyst API reference (HTTP 200 verified
+  2026-07-19). Lastline does not use RFC 7807/9457 problem+json; it uses a custom success/error
+  envelope with a numeric error_code and a symbolic ANALYSIS_API_* name.
+format: custom-envelope
+envelope:
+  success: '{"success": 1, "data": ...}'
+  failure: '{"success": 0, "error_code": <ERROR_CODE>, "error": <ERROR_MESSAGE>}'
+  fields:
+  - name: success
+    description: 1 on success, 0 on failure.
+  - name: error_code
+    description: Numeric error code. Optional — not every failure carries one.
+  - name: error
+    description: Human-readable error message.
+  content_negotiation: Response format is selected by appending a .json or .xml extension to the
+    request path; JSON is the default.
+transport_notes:
+- Uploads exceeding the server limit are rejected before reaching the API and return HTTP 413 Request
+  Entity Too Large; clients must handle both HTTP 413 and error_code 109.
+errors:
+- code: 101
+  name: ANALYSIS_API_FILE_UPLOAD_REQUIRED
+  message: File content required for analysis.
+  description: Returned when submitting a file by hash but the file content is required to perform
+    an analysis. Submit the actual file instead. Even if the content was uploaded previously, this
+    error may recur because files may be deleted after analysis or subject to data retention.
+  remediation: Retry the submission with the file content in the `file` parameter.
+- code: 104
+  name: ANALYSIS_API_INVALID_CREDENTIALS
+  message: Provided key and api_token are not valid credentials.
+  description: No valid API credentials were provided. All requests require a valid API key and API
+    token.
+  remediation: Check the key/api_token pair or the HTTP Basic credentials.
+- code: 105
+  name: ANALYSIS_API_INVALID_UUID
+  message: task_uuid is not a valid uuid.
+  description: Returned when requesting results for a task if the provided UUID is not valid.
+  remediation: Use the UUID exactly as returned by submit_file() or submit_url().
+- code: 106
+  name: ANALYSIS_API_NO_RESULT_FOUND
+  message: No results are yet available for requested task.
+  description: The analysis has not completed. Polling get_result() on incomplete tasks is discouraged
+    and may lead to the client being blocked.
+  remediation: Use get_completed() to learn which tasks have finished, then call get_result().
+- code: 107
+  name: ANALYSIS_API_TEMPORARILY_UNAVAILABLE
+  message: Service is temporarily unavailable.
+  description: API functionality is temporarily unavailable.
+  remediation: Retry later with backoff.
+- code: 108
+  name: ANALYSIS_API_PERMISSION_DENIED
+  message: Access to service functionality has been denied.
+  description: The credentials are valid but lack the privileges for the requested functionality.
+    Some parameters (bypass_cache, analysis_timeout) require non-default privileges.
+  remediation: Request elevated API privileges from the provider.
+- code: 109
+  name: ANALYSIS_API_FILE_TOO_LARGE
+  message: Provided file exceeds upload limit.
+  description: The submitted file exceeds the upload limit. Hosted infrastructure allowed up to 64 MB;
+    on-premises deployments were configurable up to 100 MB with a 10 MB default.
+  remediation: Submit a smaller file, or handle HTTP 413 for server-side rejections.
+- code: 112
+  name: ANALYSIS_API_INVALID_D_METADATA
+  message: Invalid download metadata were specified.
+  description: Invalid download metadata was submitted with the request.
+- code: 113
+  name: ANALYSIS_API_INVALID_FILE_TYPE
+  message: Provided file-type is not supported by any available analysis engine.
+  description: The submitted file type has no available analysis engine.
+- code: 114
+  name: ANALYSIS_API_INVALID_ARTIFACT_UUID
+  message: Artifact_uuid contains an invalid artifact name and/or report uuid.
+  description: The requested artifact UUID was invalid, or the artifact is no longer available because
+    data retention policies deleted it.
+- code: 115
+  name: ANALYSIS_API_SUBMISSION_LIMIT_EXCEEDED
+  message: The number of submissions allowed for this license has been exceeded.
+  description: Certain licenses are restricted in the number or type of submissions allowed on a
+    24-hour interval.
+  remediation: Wait for the 24-hour window to roll over or upgrade the license.
+- code: 116
+  name: ANALYSIS_API_INVALID_HASH_ALGORITHM
+  message: An invalid hash-algorithm has been provided.
+  description: The given hash algorithm is either invalid or unknown.
+- code: 117
+  name: ANALYSIS_API_INVALID_URL
+  message: Invalid URL or refer(r)er submitted.
+  description: An invalid URL or referrer was submitted to submit_url().
+- code: 118
+  name: ANALYSIS_API_INVALID_REPORT_VERSION
+  message: Invalid report version.
+  description: The requested report version is invalid.
+- code: 119
+  name: ANALYSIS_API_FILE_EXTRACTION_FAILED
+  message: Extracting files from the submitted archive failed.
+  description: The archive format is not supported, or the archive is protected with an unknown
+    password, or an incorrect decryption password was specified in submit_file().
+- code: 120
+  name: ANALYSIS_API_NO_IOC_EXTRACTABLE
+  message: No IOCs can be extracted from the given task.
+  description: The requested report cannot be expressed as an IOC in the requested format — typically
+    because the report lacks sufficient actions to build a meaningful IOC, or the resulting IOC would
+    cause too many false positives.
+- code: 121
+  name: ANALYSIS_API_CHILD_TASK_CHAIN_TOO_DEEP
+  message: Creating child tasks for a given analyst-engine reached the max limit.
+  description: Internal, do not use. The submission was rejected due to generation of overly long
+    chains of analysis child tasks.
+- code: 122
+  name: ANALYSIS_API_AUTHENTICATION_REQUIRED
+  message: Credentials or session identifier missing.
+  description: The request does not contain the required credentials and no valid session identifier
+    was provided, or the session has expired.
+  remediation: Re-authenticate with login() or resend the key/api_token pair.
+- code: 123
+  name: ANALYSIS_API_DATA_NO_LONGER_AVAILABLE
+  message: The requested data is no longer available.
+  description: Data retention policies caused the requested data to be deleted.
+- code: null
+  name: ANALYSIS_API_FILE_NOT_AVAILABLE
+  message: File not available.
+  description: Documented as an alias of ANALYSIS_API_FILE_UPLOAD_REQUIRED; the reference gives no
+    distinct numeric code.
+- code: null
+  name: ANALYSIS_API_INVALID_PRIORITY
+  message: Invalid priority level.
+  description: Listed in the per-method error tables; the reference gives no numeric code entry.

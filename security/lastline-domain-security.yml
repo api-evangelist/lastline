@@ -1,0 +1,28 @@
+generated: '2026-07-19'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.lastline.com
+  https: false
+- host: user.lastline.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct  1 23:59:59 2026 GMT
+  hsts: false
+- host: analysis.lastline.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct  1 23:59:59 2026 GMT
+  hsts: null
+domains:
+- domain: lastline.com
+  dnssec: false
+  caa:
+  - 0 issue "digicert.com"
+  - 0 issuewild "globalsign.com"
+  - 0 issue "globalsign.com"
+  - 0 issuewild "digicert.com"
+  - 0 issuewild "amazon.com"
+  - 0 issue "amazon.com"
+  spf: false
+  dmarc: false

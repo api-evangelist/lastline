@@ -1,0 +1,36 @@
+generated: '2026-07-19'
+method: searched
+source: https://analysis.lastline.com/analysis/api-docs/html/analysis_client.html#changelog
+docs: https://analysis.lastline.com/analysis/api-docs/html/analysis_client.html#changelog
+note: >-
+  Lastline published no changelog for the HTTP API itself. The only dated change record on the
+  public developer surface is the Analyst API Python client changelog, which by its own statement
+  "only reflects backwards-incompatible changes; new functionality may not be reflected in all
+  cases". Both documented entries are transcribed below verbatim in substance; no further entries
+  exist on the page as served on 2026-07-19.
+scheme: dated-breaking-changes-only
+scope: python-client
+current_version: null
+version_note: The Analyst API client is distributed as a single unversioned analysis_apiclient.py
+  download rather than a versioned package release.
+entries:
+- date: '2016-10-28'
+  title: Move API client shell to dedicated script.
+  breaking: true
+  additions: false
+  highlights:
+  - The API client shell moved to analysis_apiclient_shell.py, which provides easier access to the
+    helper modules provided by the API client module.
+- date: '2016-10-05'
+  title: Stop download of full report details during submission.
+  breaking: true
+  additions: false
+  highlights:
+  - Submission functions (submit_file, submit_file_hash, submit_url) now default to
+    full_report_score=ANALYSIS_API_NO_REPORT_DETAILS (the constant for -1), which disables automatic
+    download of the full detailed analysis report when a cached result is immediately available.
+  - To access the full analysis report, call get_result() with the task_uuid returned as part of the
+    submission result.
+related:
+- packages/lastline-packages.yml
+- lifecycle/lastline-lifecycle.yml

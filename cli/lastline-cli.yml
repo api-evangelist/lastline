@@ -1,0 +1,79 @@
+generated: '2026-07-19'
+method: searched
+source: https://analysis.lastline.com/analysis/api-docs/html/analyze_artifacts.html
+docs: https://analysis.lastline.com/analysis/api-docs/html/analyze_artifacts.html
+note: >-
+  Lastline did not ship a single unified `lastline` CLI binary. It published two first-party
+  command-line submission tools plus an interactive API shell, all documented in the Analyst API
+  documentation and still downloadable (HTTP 200 verified 2026-07-19). The command surface below is
+  transcribed from the published usage; only documented options are listed.
+tools:
+- name: analyze_files
+  description: Submit one file, or every file in a directory, for analysis and write the results into
+    a results directory.
+  install:
+  - method: python-script
+    command: curl -O https://analysis.lastline.com/analysis/api-docs/examples/analyze_files.py
+    requirements: Requires the analysis_apiclient module either on the Python search path inside an
+      `llapi_client` package directory, or placed in the current working directory.
+  - method: windows-executable
+    command: curl -O https://analysis.lastline.com/analysis/api-docs/examples/analyze_files.exe
+    requirements: Self-contained; tested on Windows XP, Windows 7 and Windows 10.
+  usage:
+  - python analyze_files.py RESULTS_DIRECTORY FILE
+  - python analyze_files.py RESULTS_DIRECTORY DIRECTORY
+  - analyze_files.exe RESULTS_DIRECTORY FILE
+  - analyze_files.exe RESULTS_DIRECTORY DIRECTORY
+  options:
+  - flag: --recursive
+    description: Find files to submit recursively beneath the given directory.
+  - flag: --portal-account
+    description: Add submissions made through the API to the web portal under the given account.
+  - flag: --api-url
+    description: Point the tool at an on-premises API location instead of the hosted Lastline
+      datacenter API.
+  - flag: --help
+    description: Print the full usage, including filters by file extension and file size.
+  outputs: Writes per-submission `<file>_<uuid>_result.json` / `.xml`, `_analysis_tags.json` / `.xml`,
+    `_report_url.json`, plus `analysis.log` and `error.log` into the results directory.
+- name: analyze_urls
+  description: Submit URLs for analysis and write the results into a results directory.
+  install:
+  - method: python-script
+    command: curl -O https://analysis.lastline.com/analysis/api-docs/examples/analyze_urls.py
+  - method: windows-executable
+    command: curl -O https://analysis.lastline.com/analysis/api-docs/examples/analyze_urls.exe
+  options:
+  - flag: --api-url
+    description: Point the tool at an on-premises API location.
+  - flag: --help
+    description: Print the full usage.
+- name: analysis_apiclient_shell
+  description: Interactive IPython shell for manually sending Lastline Analyst API requests and
+    experimenting with file/URL analysis. Split out of the client module on 2016-10-28.
+  docs: https://analysis.lastline.com/analysis/api-docs/html/analysis_client_shell.html
+  install:
+  - method: python-script
+    requirements: Requires the ipython module in addition to the analysis_apiclient requirements.
+configuration:
+  file: license.ini
+  location: The directory the tool is run from, by default.
+  format: ini
+  section: analysis_api
+  keys:
+  - name: key
+    description: Lastline Analyst API key.
+    required: true
+  - name: api_token
+    description: Lastline Analyst API token.
+    required: true
+  - name: url
+    description: Optional API base URL, for on-premises deployments. Equivalent to --api-url.
+    required: false
+  example: |
+    [analysis_api]
+    key = XXXXXXXXXXXXXXX
+    api_token = yyyyyyyyyyyyyy
+related:
+- packages/lastline-packages.yml
+- authentication/lastline-authentication.yml

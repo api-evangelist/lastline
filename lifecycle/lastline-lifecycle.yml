@@ -1,0 +1,105 @@
+generated: '2026-07-19'
+method: probed
+source: https://analysis.lastline.com/analysis/api-docs/html/index.html
+note: >-
+  Lastline publishes no versioning policy, no deprecation policy, no SLA and no status page. This
+  artifact records the ownership/product lifecycle of the company and its API surface, assembled from
+  direct evidence gathered on 2026-07-19: live HTTP probes, the TLS certificate on lastline.com, and
+  the copyright and support links in the live first-party API documentation. Facts not directly
+  evidenced by those probes are marked with their confidence.
+company_status: acquired
+ownership_timeline:
+- date: '2011'
+  event: Lastline, Inc. founded in Santa Barbara, California.
+  evidence: Company address published on archived lastline.com — 6950 Hollister Avenue Suite 101,
+    Santa Barbara, CA 93117.
+  confidence: high
+- date: '2020'
+  event: Acquired by VMware; technology folded into VMware NSX Network Detection and Response.
+  evidence: Live API documentation carries "Copyright © 2009–2021 VMware, Inc." and links support to
+    https://my.vmware.com/group/vmware/get-help and http://www.vmware.com.
+  confidence: high
+  note: Public record puts the acquisition announcement in June 2020; the precise date was not
+    re-verified in this pass, so only the year is asserted here.
+- date: '2023'
+  event: VMware acquired by Broadcom Inc.; lastline.com assets now under Broadcom ownership.
+  evidence: TLS certificate served for lastline.com / user.lastline.com is issued to "C=US,
+    ST=California, L=Palo Alto, O=Broadcom Inc., CN=lastline.com" (DigiCert Global G2, valid
+    2026-03-17 to 2026-10-01), probed 2026-07-19.
+  confidence: high
+successor_product:
+  name: VMware NSX Network Detection and Response
+  evidence: The live portal at https://user.lastline.com/portal serves the page title "NSX - Network
+    Detection and Response".
+surface_status:
+- surface: marketing site
+  url: https://www.lastline.com/
+  status: retired
+  http_status: null
+  probe_result: connection timed out after 20s (DNS resolves to 208.91.0.132, no HTTP service)
+  probed: '2026-07-19'
+- surface: customer portal
+  url: https://user.lastline.com/portal
+  status: live
+  http_status: 200
+  probed: '2026-07-19'
+- surface: API documentation
+  url: https://analysis.lastline.com/analysis/api-docs/html/index.html
+  status: live
+  http_status: 200
+  probed: '2026-07-19'
+  note: Also served identically from user.lastline.com. PDF edition at
+    /analysis/api-docs/LastlineAnalystAPI.pdf carries a Last-Modified of 2026-07-03.
+- surface: API base
+  url: https://analysis.lastline.com/analysis
+  status: live-authenticated
+  probed: '2026-07-19'
+  note: Endpoints require API credentials; unauthenticated probes of the docs root return 404.
+- surface: Python client downloads
+  url: https://analysis.lastline.com/analysis/api-docs/llapi_client/analysis_apiclient.py
+  status: live
+  http_status: 200
+  probed: '2026-07-19'
+versioning:
+  scheme: none
+  current: null
+  docs: https://analysis.lastline.com/analysis/api-docs/html/api.html
+  note: The HTTP API is unversioned — no path segment, no version header. Report payloads carry their
+    own `report_version` values per report format.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  note: >-
+    No deprecation or sunset policy is published, and no RFC 8594 Sunset/Deprecation header support is
+    documented. The only deprecation signalling on the developer surface is parameter-level, inside
+    the Python client reference — for example submit_file()'s download_ip, download_port and
+    download_url parameters are each annotated "DEPRECATED!" with a named replacement (server_ip,
+    server_port, and the download_host/download_path pair respectively).
+  deprecated_parameters:
+  - operation: submit_file
+    parameter: download_ip
+    replacement: server_ip
+  - operation: submit_file
+    parameter: download_port
+    replacement: server_port
+  - operation: submit_file
+    parameter: download_url
+    replacement: download_host + download_path
+sla:
+  url: null
+  uptime_target: null
+status_page: null
+status_page_note: No status page was found for lastline.com or its subdomains as of 2026-07-19.
+support:
+  url: https://my.vmware.com/group/vmware/get-help
+  note: The API documentation's "Contact Us" link points at VMware's help portal.
+data_retention:
+  documented: true
+  note: Analysis data, reports and artifacts are subject to data-retention policies; expired data
+    returns ANALYSIS_API_DATA_NO_LONGER_AVAILABLE (123) or ANALYSIS_API_INVALID_ARTIFACT_UUID (114).
+  see: conventions/lastline-conventions.yml
+related:
+- changelog/lastline-changelog.yml
+- conventions/lastline-conventions.yml
+- security/lastline-domain-security.yml
