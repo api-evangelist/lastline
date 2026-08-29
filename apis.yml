@@ -22,6 +22,17 @@ x-status: acquired
 x-acquired-by: VMware
 x-acquired-year: '2020'
 x-successor-product: VMware NSX Network Detection and Response
+deliveryModel:
+  model: library
+  open_source: false
+  commercial: false
+  callable_host: false
+  label: Library · distributed through package registries, no callable service
+  confidence: low
+  source:
+  - none
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
