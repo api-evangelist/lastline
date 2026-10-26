@@ -1,0 +1,117 @@
+# Lastline
+
+<!-- API-EVANGELIST-PROVENANCE:BEGIN -->
+> ### About this repository
+>
+> **This is not our API.** This repository is an independent, third-party profile of a company's
+> **publicly available** API surface, maintained by [API Evangelist](https://apievangelist.com).
+> API Evangelist does not operate, host, resell, or support this company's APIs, and is not
+> affiliated with or endorsed by the company unless stated on the profile.
+>
+> **Where the information came from.** Everything here is assembled from material a member of the
+> public can reach with a browser and no credentials — the company's own website, developer portal
+> and documentation, the specifications it publishes for public use (OpenAPI, AsyncAPI, JSON Schema,
+> `apis.json`, `llms.txt` and similar), its public repositories, and its public status, pricing and
+> changelog pages. **Nothing here is obtained by breaching a system, defeating an access control, or
+> using credentials of any kind.**
+>
+> **The rating is an independent assessment.** The Kin Score and Agent Readiness rating are
+> independently calculated scores of a company's *public* API artifacts, produced by API Evangelist
+> against a published rubric. They are not certifications, endorsements, security assessments, or
+> audits, and they score published artifacts — not the quality, safety, or security of the software.
+>
+> **Corrections, re-scores, and removal are free.** No partnership, contract, or purchase is
+> required, and you do not need to justify the request.
+>
+> - **Something wrong?** Open an issue on this repository, or email
+>   [info@apievangelist.com](mailto:info@apievangelist.com).
+> - **Published something new?** Ask for a re-score and we will re-run the rating.
+> - **Want the listing taken down?** Say so and we will honor it. The profile is reduced to your
+>   company name, a factual description, and a link to your own site, and the company is recorded as
+>   **unrated** — never scored zero for having asked.
+>
+> **Response times.** Acknowledgement within **one business day**; removal or restriction within
+> **two business days**; corrections and re-scores within **five business days**.
+>
+> **Not from the company, and here with a question?** You are welcome here — we would rather be the
+> front line and point you the right way than have a good report go nowhere. What this repository
+> can answer is narrow, though, so it is worth knowing who you are actually looking for:
+>
+> - **A question about how the API works, an account, billing, or a bug in the service** — that is
+>   the company's own support, not us. We profile this API; we do not operate it and cannot see
+>   your account.
+> - **A bug in an open-source project we only catalog** — file it on that project's own repository.
+>   This has happened with a real and correct bug report that reached us instead of the people who
+>   could fix it, which helped nobody.
+> - **Anything about this listing itself** — the description, the tags, the rating, a missing or
+>   wrong artifact — is ours. Open an issue here.
+> - **Not sure, or something general about API Evangelist or APIs.io** — open an issue on the
+>   [APIs.io Inbox](https://github.com/api-search/inbox) and we will route it.
+>
+> **This repository contains no software, and we will never ask you to download anything.** There is
+> no build, release, installer, or binary here — only text and machine-readable API descriptions, so
+> there is nothing here that can be "corrupt" or need "repairing". Any issue, comment, or email
+> claiming otherwise and offering a download link is not from us and is hostile. Do not follow the
+> link; it is a lure. Report it to GitHub and, if you like, tell us at
+> [info@apievangelist.com](mailto:info@apievangelist.com) so we can take it down.
+>
+> **On a security or compliance team?** Email
+> [info@apievangelist.com](mailto:info@apievangelist.com) with *security* in the subject line and
+> you will get a person, not a form. We will tell you exactly which public URLs this profile was
+> built from so your team can see the same surface we did, and we will take the listing down on
+> request while you work through it.
+>
+> Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
+<!-- API-EVANGELIST-PROVENANCE:END -->
+
+Lastline was a Santa Barbara, California cybersecurity company founded in 2011, building
+high-resolution malware analysis and network detection and response (NDR) technology based on
+full-system emulation sandboxing. Its developer-facing surface is the **Lastline Analyst API** — an
+asynchronous web API for submitting files and URLs to the Lastline analysis cloud and retrieving
+detailed behavioral analysis reports, indicators of compromise and analysis artifacts.
+
+Lastline was acquired by VMware in 2020 and the technology became VMware NSX Network Detection and
+Response; VMware was subsequently acquired by Broadcom.
+
+## Current state (probed 2026-07-19)
+
+| Surface | Status |
+|---|---|
+| `www.lastline.com` marketing site | Retired — no HTTP response |
+| `user.lastline.com/portal` customer portal | Live (200), titled "NSX - Network Detection and Response" |
+| `analysis.lastline.com/analysis/api-docs/html/` API reference | Live (200) |
+| First-party Python client + CLI downloads | Live (200) |
+| TLS certificate for `lastline.com` | Issued to Broadcom Inc. |
+
+## API
+
+- **Base URL:** `https://analysis.lastline.com/analysis`
+- **Reference:** https://analysis.lastline.com/analysis/api-docs/html/api.html
+- **Auth:** HTTP Basic (RFC 7617) or `key` + `api_token` parameters, with an optional session
+- **Style:** RPC over HTTP, JSON or XML selected by URL extension, unversioned
+- **No OpenAPI definition was ever published.**
+
+## Artifacts
+
+| Artifact | File |
+|---|---|
+| Authentication | `authentication/lastline-authentication.yml` |
+| API conventions | `conventions/lastline-conventions.yml` |
+| Error catalog (codes 101–123) | `errors/lastline-error-codes.yml` |
+| Data model | `data-model/lastline-data-model.yml` |
+| Packages / SDKs | `packages/lastline-packages.yml` |
+| CLI | `cli/lastline-cli.yml` |
+| Changelog | `changelog/lastline-changelog.yml` |
+| Lifecycle | `lifecycle/lastline-lifecycle.yml` |
+| Conformance | `conformance/lastline-conformance.yml` |
+| Domain security | `security/lastline-domain-security.yml` |
+| llms.txt | `llms/lastline-llms.txt` |
+
+## Deliberate absences
+
+Probed and confirmed **not** published, rather than assumed: OpenAPI/AsyncAPI/GraphQL specs, webhooks
+or any event surface, MCP server, OAuth scopes, sandbox/test credentials, status page,
+`/.well-known/security.txt`, bug bounty program, trust center or compliance certifications, and any
+first-party package on npm, PyPI, RubyGems, Maven Central, NuGet, pkg.go.dev, Packagist or crates.io.
+
+Backed by: redpoint-ventures
