@@ -64,54 +64,53 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Lastline was a Santa Barbara, California cybersecurity company founded in 2011, building
-high-resolution malware analysis and network detection and response (NDR) technology based on
-full-system emulation sandboxing. Its developer-facing surface is the **Lastline Analyst API** — an
-asynchronous web API for submitting files and URLs to the Lastline analysis cloud and retrieving
-detailed behavioral analysis reports, indicators of compromise and analysis artifacts.
+> **Acquired or rebranded.** This company was acquired, merged or renamed. Its API, if it still exists, is offered under another name. This profile is kept as a historical record and is not maintained or rated.
 
-Lastline was acquired by VMware in 2020 and the technology became VMware NSX Network Detection and
-Response; VMware was subsequently acquired by Broadcom.
+Lastline was a Santa Barbara, California cybersecurity company founded in 2011, building high-resolution malware analysis and network detection and response (NDR) technology based on full-system emulation sandboxing. Its developer-facing surface is the Lastline Analyst API (marketed in the company's earliest years as the Previct Analyst API), an asynchronous web API for submitting files and URLs to the Lastline analysis cloud and retrieving detailed behavioral analysis reports, indicators of compromise and analysis artifacts. Lastline was acquired by VMware in 2020 and the technology was folded into VMware NSX Network Detection and Response; VMware was subsequently acquired by Broadcom. The lastline.com marketing site is retired and no longer answers HTTP, but the customer portal at user.lastline.com is live and branded "NSX - Network Detection and Response" behind a Broadcom Inc. TLS certificate, and the full Analyst API reference plus its first-party Python client downloads remain served. This profile captures that surviving API surface from the live first-party documentation, together with probes recording what is no longer published.
 
-## Current state (probed 2026-07-19)
+**Areas:** Company · Cybersecurity · Malware Analysis · Sandboxing · Threat Intelligence · Network Detection and Response · Security · Acquired
 
-| Surface | Status |
-|---|---|
-| `www.lastline.com` marketing site | Retired — no HTTP response |
-| `user.lastline.com/portal` customer portal | Live (200), titled "NSX - Network Detection and Response" |
-| `analysis.lastline.com/analysis/api-docs/html/` API reference | Live (200) |
-| First-party Python client + CLI downloads | Live (200) |
-| TLS certificate for `lastline.com` | Issued to Broadcom Inc. |
+## Lastline on APIs.io (historical record)
 
-## API
+Everything profiled for Lastline is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/lastline/](https://apis.io/providers/lastline/)** — or go straight to one of the APIs or properties below.
 
-- **Base URL:** `https://analysis.lastline.com/analysis`
-- **Reference:** https://analysis.lastline.com/analysis/api-docs/html/api.html
-- **Auth:** HTTP Basic (RFC 7617) or `key` + `api_token` parameters, with an optional session
-- **Style:** RPC over HTTP, JSON or XML selected by URL extension, unversioned
-- **No OpenAPI definition was ever published.**
+### APIs (1)
 
-## Artifacts
+- [Lastline Analyst API](https://apis.io/apis/lastline/analyst-api/) — Web API for submitting files (PE, PDF, Office documents, Flash, Java applets, Android applications, archives) and URLs to the Lastline analysis cloud for…
 
-| Artifact | File |
-|---|---|
-| Authentication | `authentication/lastline-authentication.yml` |
-| API conventions | `conventions/lastline-conventions.yml` |
-| Error catalog (codes 101–123) | `errors/lastline-error-codes.yml` |
-| Data model | `data-model/lastline-data-model.yml` |
-| Packages / SDKs | `packages/lastline-packages.yml` |
-| CLI | `cli/lastline-cli.yml` |
-| Changelog | `changelog/lastline-changelog.yml` |
-| Lifecycle | `lifecycle/lastline-lifecycle.yml` |
-| Conformance | `conformance/lastline-conformance.yml` |
-| Domain security | `security/lastline-domain-security.yml` |
-| llms.txt | `llms/lastline-llms.txt` |
+### Published properties
 
-## Deliberate absences
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Probed and confirmed **not** published, rather than assumed: OpenAPI/AsyncAPI/GraphQL specs, webhooks
-or any event surface, MCP server, OAuth scopes, sandbox/test credentials, status page,
-`/.well-known/security.txt`, bug bounty program, trust center or compliance certifications, and any
-first-party package on npm, PyPI, RubyGems, Maven Central, NuGet, pkg.go.dev, Packagist or crates.io.
+#### Security (2)
 
-Backed by: redpoint-ventures
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Lastline Authentication](https://apis.io/security/lastline/lastline-authentication/)
+- [Lastline Domain Security](https://apis.io/security/lastline/lastline-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](http://www.lastline.com/)
+- [Documentation](https://analysis.lastline.com/analysis/api-docs/html/index.html)
+- [Getting started](https://analysis.lastline.com/analysis/api-docs/html/overview.html#getting-started)
+- [API reference](https://analysis.lastline.com/analysis/api-docs/html/api.html)
+- [Support](https://my.vmware.com/group/vmware/get-help)
+
+## API Evangelist rating
+
+**Not rated** — this company is recorded as acquired or rebranded, so no score is published. If it is in fact operating, say so on this repository and it will be re-profiled.
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Lastline: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/lastline/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
